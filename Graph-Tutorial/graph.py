@@ -1,5 +1,42 @@
 #!python
 
+# Challenge 1:
+
+# This tutorial will focus on properties of a social network.
+# To begin with, we'll need to define a network as a set of people (vertices)
+# and the people they know.
+# If person A knows person B then there is an edge between them.
+# We will begin by assuming that if person A knows person B then the reverse is also true.
+# (So the edge is undirected).
+#
+# Draw a graph with you at the center connected by an edge to another 9 people you know.
+# Do any of these 9 know each other?
+# If so draw an edge between them.
+# This will be your "Social Graph" to use as a sample in the rest of this tutorial.
+# Your graph must have the following properties:
+# Every person knows at least 2 other people.
+# No person knows more than 5 people.
+# Challenge Add a diagram (or hand drawn image) of your friend network
+# to the readme of your tutorial code.
+# Label the nodes with you and your 9 friends names.
+# If you don't want to use your real friends,
+# feel free to use Faker to give fake names.
+#
+# Implement in code
+#
+# Throughout this tutorial we will build up a graph data structure that will
+# implement our graph and graph algorithms in python.
+#
+# We will be building onto the basic Graph Abstract Data Type (ADT)
+# which is defined as follows:
+#
+# Graph() #creates a new, empty graph.
+# addVertex(vert) #adds an instance of Vertex to the graph.
+# addEdge(fromVert, toVert) #Adds a new, directed edge to the graph that connects two vertices.
+# addEdge(fromVert, toVert, weight) #Adds a new, weighted, directed edge to the graph that connects two vertices.
+# getVertex(vertKey) #finds the vertex in the graph named vertKey.
+# getVertices() #returns the list of all vertices in the graph.
+
 """ Vertex Class
 A helper class for the Graph class that defines vertices and vertex neighbors.
 """
@@ -19,7 +56,7 @@ class Vertex(object):
 
     def addNeighbor(self, vertex, weight=0):
         """add a neighbor along a weighted edge"""
-        # TODO check if vertex is already a neighbot
+        # TODO check if vertex is already a neighbor
         # TODO if not, add vertex to neighbors and assign weight.
 
     def __str__(self):
@@ -38,7 +75,7 @@ class Vertex(object):
     def getEdgeWeight(self, vertex):
         """return the weight of this edge"""
         # TODO return the weight of the edge from this
-        vertext to the given vertex.
+        # vertext to the given vertex.
 
 
 """ Graph Class
