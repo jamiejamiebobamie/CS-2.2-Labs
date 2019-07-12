@@ -1,52 +1,11 @@
-#!python
-
-# Challenge 1:
-
-# This tutorial will focus on properties of a social network.
-# To begin with, we'll need to define a network as a set of people (vertices)
-# and the people they know.
-# If person A knows person B then there is an edge between them.
-# We will begin by assuming that if person A knows person B then the reverse is also true.
-# (So the edge is undirected).
-#
-# Draw a graph with you at the center connected by an edge to another 9 people you know.
-# Do any of these 9 know each other?
-# If so draw an edge between them.
-# This will be your "Social Graph" to use as a sample in the rest of this tutorial.
-# Your graph must have the following properties:
-# Every person knows at least 2 other people.
-# No person knows more than 5 people.
-# Challenge Add a diagram (or hand drawn image) of your friend network
-# to the readme of your tutorial code.
-# Label the nodes with you and your 9 friends names.
-# If you don't want to use your real friends,
-# feel free to use Faker to give fake names.
-#
-# Implement in code
-#
-# Throughout this tutorial we will build up a graph data structure that will
-# implement our graph and graph algorithms in python.
-#
-# We will be building onto the basic Graph Abstract Data Type (ADT)
-# which is defined as follows:
-#
-# Graph() #creates a new, empty graph.
-# addVertex(vert) #adds an instance of Vertex to the graph.
-# addEdge(fromVert, toVert) #Adds a new, directed edge to the graph that connects two vertices.
-# addEdge(fromVert, toVert, weight) #Adds a new, weighted, directed edge to the graph that connects two vertices.
-# getVertex(vertKey) #finds the vertex in the graph named vertKey.
-# getVertices() #returns the list of all vertices in the graph.
 
 """ Vertex Class
 A helper class for the Graph class that defines vertices and vertex neighbors.
 """
-
-
 class Vertex(object):
 
     def __init__(self, vertex):
         """initialize a vertex and its neighbors
-
         neighbors: set of vertices adjacent to self,
         stored in a dictionary with key = vertex,
         value = weight of edge between self and neighbor.
@@ -56,27 +15,24 @@ class Vertex(object):
 
     def addNeighbor(self, vertex, weight=0):
         """add a neighbor along a weighted edge"""
-        # TODO check if vertex is already a neighbor
-        # TODO if not, add vertex to neighbors and assign weight.
+        if vertex not in self.neighbors:
+            self.neighbors[vertex] = weight
 
     def __str__(self):
         """output the list of neighbors of this vertex"""
-        return str(self.id) + " adjancent to " +
-        str([x.id for x in self.neighbors])
+        return str(self.id) + " adjancent to " + str([x.id for x in self.neighbors])
 
     def getNeighbors(self):
         """return the neighbors of this vertex"""
-        # TODO return the neighbors
+        return self.neighbors
 
     def getId(self):
         """return the id of this vertex"""
         return self.id
 
     def getEdgeWeight(self, vertex):
-        """return the weight of this edge"""
-        # TODO return the weight of the edge from this
-        # vertext to the given vertex.
-
+        """"return the weight of this edge"""
+        return self.neighbors[vertex] if self.neighbors[vertex] else None
 
 """ Graph Class
 A class demonstrating the essential
@@ -95,24 +51,25 @@ class Graph:
         """add a new vertex object to the graph with
         the given key and return the vertex
         """
-        # TODO increment the number of vertices
-        # TODO create a new vertex
-        # TODO add the new vertex to the vertex list
-        # TODO return the new vertex
+        self.numVertices += 1
+        new_vertex = Vertex(key)
+        self.vertList[key] = new_vertex
+        return self.vertList[key]
 
     def getVertex(self, n):
         """return the vertex if it exists"""
-        # TODO return the vertex if it is in the graph
+        return self.vertList[n] if self.vertList[n] else None
 
     def addEdge(self, f, t, cost=0):
         """add an edge from vertex f to vertex t with a cost
         """
-        # TODO if either vertex is not in the graph,
-        # add it - or return an error (choice is up to you).
-        # TODO if both vertices in the graph, add the
-        # edge by making t a neighbor of f
-        # and using the addNeighbor method of the Vertex class.
-        # Hint: the vertex f is stored in self.vertList[f].
+        if not self.vertList[f]:
+            new_vertex = Vertex(f)
+            self.vertList[f] = new_vertex
+        if not self.vertList[t]:
+            new_vertex = Vertex(t)
+            self.vertList[t] = new_vertex
+        self.vertList[f].addNeighbor(t,cost)
 
     def getVertices(self):
         """return all the vertices in the graph"""
@@ -127,7 +84,6 @@ class Graph:
 
 # Driver code
 
-
 if __name__ == "__main__":
 
     # Challenge 1: Create the graph
@@ -138,18 +94,41 @@ if __name__ == "__main__":
     g.addVertex("Friend 1")
     g.addVertex("Friend 2")
     g.addVertex("Friend 3")
-
+    g.addVertex("Friend 4")
+    g.addVertex("Friend 5")
+    g.addVertex("Friend 6")
+    g.addVertex("Friend 7")
+    g.addVertex("Friend 8")
+    g.addVertex("Friend 9")
+    g.addVertex("ME!")
     # ...  add all 10 including you ...
 
     # Add connections (non weighted edges for now)
     g.addEdge("Friend 1", "Friend 2")
     g.addEdge("Friend 2", "Friend 3")
+    g.addEdge("Friend 3", "Friend 4")
+    g.addEdge("Friend 4", "Friend 5")
+    g.addEdge("Friend 5", "Friend 6")
+    g.addEdge("Friend 6", "Friend 7")
+    g.addEdge("Friend 7", "Friend 8")
+    g.addEdge("Friend 8", "Friend 9")
+    g.addEdge("Friend 9", "ME!")
+    g.addEdge("ME!", "Friend 1")
+
+    g.addEdge("Friend 1", "Friend 3")
+    g.addEdge("Friend 2", "Friend 4")
+    g.addEdge("Friend 3", "Friend 5")
+    g.addEdge("Friend 4", "Friend 6")
+    g.addEdge("Friend 5", "Friend 7")
+    g.addEdge("Friend 6", "Friend 8")
+    g.addEdge("Friend 7", "Friend 9")
+    g.addEdge("Friend 8", "ME!")
+    g.addEdge("Friend 9", "Friend 1")
+    g.addEdge("ME!", "Friend 2")
 
     # Challenge 1: Output the vertices & edges
-    # Print vertices
-    print("The vertices are: ", g.getVertices(), "\n")
+    print("The vertices are: ", g.getVertices())
 
     print("The edges are: ")
-    for v in g:
-        for w in v.getNeighbors():
-            print("( %s , %s )" % (v.getId(), w.getId()))
+    for v in g.vertList:
+        print("( %s, %s , %s )" % (v, g.vertList[v].neighbors.keys(), g.vertList[v].neighbors.values()))
