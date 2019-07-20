@@ -81,6 +81,39 @@ class Graph:
         """
         return iter(self.vertList.values())
 
+def make_graph_from_file(filepath):
+    """input file should be of form:
+            G
+            1,2,3,4
+            (1,2)
+            (1,3)
+            (2,4)
+    returns an array of vertices (ints) and and array of edges (tuple of two vertices: source to target)
+    """
+
+    edges = []
+    listOfVertices = []
+    graphType = ""
+
+    with open(filepath, "r") as f:
+        entries = f.read().split("\n")
+
+    for i, entry in enumerate(entries):
+        if i == 0: # the first entry is either 'G' or 'D'
+            if entry == 'G' or entry == 'D':
+                graphType = entry
+            else:
+                raise Exception("File must begin with G or D.")
+        elif i == 1: # the second entry is a list of vertices
+            for i, v in enumerate(entry):
+                    if not i % 2: # parse the string to get all numbers
+                        listOfVertices.append(int(v))
+        elif len(entry) > 0: # takes into account empty lines
+            edges.append((int(entry[1]), int(entry[3])))
+            if graphType == "G": # If it is a Graph and not a Digraph, add another edge in the opposite direction
+                edges.append((int(entry[3]), int(entry[1])))
+
+    return listOfVertices, edges
 
 # Driver code
 
@@ -132,3 +165,5 @@ if __name__ == "__main__":
     print("The edges are: ")
     for v in g.vertList:
         print("( %s, %s , %s )" % (v, g.vertList[v].neighbors.keys(), g.vertList[v].neighbors.values()))
+
+    print(make_graph_from_file("/Users/jamesmccrory/Documents/dev/CS-2.2-labs/sampleGraphFile.txt"))
