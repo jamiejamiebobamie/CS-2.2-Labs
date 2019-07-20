@@ -1,3 +1,5 @@
+from collections import deque as d
+
 
 """ Vertex Class
 A helper class for the Graph class that defines vertices and vertex neighbors.
@@ -24,7 +26,7 @@ class Vertex(object):
 
     def getNeighbors(self):
         """return the neighbors of this vertex"""
-        return self.neighbors
+        return self.neighbors.keys()
 
     def getId(self):
         """return the id of this vertex"""
@@ -80,6 +82,25 @@ class Graph:
         graph, to use sytax: for v in g
         """
         return iter(self.vertList.values())
+
+    def breadth_first_search(self, vertex, n):
+        # Make sure the input node is actually in the graph
+        # Run breadth_first_search starting from the input node and going `n` levels deep
+        # Return all nodes found at the `n`th level
+
+        queue = d()
+        degreesOfSeparation = int(n)
+        result = []
+
+        def __helper_breadth_first_search(current_vert, degreesOfSeparation):
+            if self.vertList[current_vert].getNeighbors() and degreesOfSeparation>0 and len(queue) > 0:
+                queue.extend(self.vertList[current_vert].getNeighbors())
+            return __helper_breadth_first_search(queue.popleft(),degreesOfSeparation-1)
+
+        if vertex not in self.vertList:
+            raiseException("The vertex is not present in your graph.")
+        # print(vertex,n)
+        return __helper_breadth_first_search(vertex,n)
 
 def make_graph_from_file(filepath):
     """input file should be of form:
@@ -160,10 +181,23 @@ if __name__ == "__main__":
     g.addEdge("ME!", "Friend 2")
 
     # Challenge 1: Output the vertices & edges
+    print("\n Challenge 1: Output the vertices & edges:")
     print("The vertices are: ", g.getVertices())
 
     print("The edges are: ")
     for v in g.vertList:
         print("( %s, %s , %s )" % (v, g.vertList[v].neighbors.keys(), g.vertList[v].neighbors.values()))
 
+    print("\n stretch challenge for challenge #1")
     print(make_graph_from_file("/Users/jamesmccrory/Documents/dev/CS-2.2-labs/sampleGraphFile.txt"))
+
+    # challenge 2: testing the getNeighbors method.
+    print("\nChallenge 2: testing the getNeighbors method:")
+    print('testing getNeighbors() method:')
+    for v in g.vertList:
+        print(v)
+        print(g.vertList[v].getNeighbors())
+
+    # challenge 3: breadth first search:
+    print("\nchallenge 3: breadth first search:")
+    print(g.breadth_first_search("Friend 1", 1))
