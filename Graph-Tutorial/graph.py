@@ -88,19 +88,82 @@ class Graph:
         # Run breadth_first_search starting from the input node and going `n` levels deep
         # Return all nodes found at the `n`th level
 
+        """This method assumes that we only want the friends who are n-friends away.
+        BROKEN****
+        """
+
         queue = d()
         degreesOfSeparation = int(n)
-        result = []
+        result = set()
 
         def __helper_breadth_first_search(current_vert, degreesOfSeparation):
-            if self.vertList[current_vert].getNeighbors() and degreesOfSeparation>0 and len(queue) > 0:
-                queue.extend(self.vertList[current_vert].getNeighbors())
-            return __helper_breadth_first_search(queue.popleft(),degreesOfSeparation-1)
+            arrayOfNeighborKeys = self.vertList[current_vert].getNeighbors()
+            if arrayOfNeighborKeys and degreesOfSeparation >= 0:
+                queue.extend(arrayOfNeighborKeys)
+                vert = queue.popleft()
+                print(queue, vert, degreesOfSeparation-1)
+                __helper_breadth_first_search(vert,degreesOfSeparation-1)
+            else:
+                result.add(current_vert)
 
-        if vertex not in self.vertList:
+
+        if vertex not in self.vertList: # check the vertex is in the graph
             raiseException("The vertex is not present in your graph.")
-        # print(vertex,n)
-        return __helper_breadth_first_search(vertex,n)
+
+        if len(self.vertList) > 0: # check the graph isn't empty.
+            __helper_breadth_first_search(vertex,n)
+
+        return list(result)
+
+
+# Challenge: Write a method findPath(self, from_vert, to_vert) in the Graph() class
+# that takes in two nodes (from_vert and to_vert) as input, and outputs the list
+# of nodes that must be traversed to get from from_vert to to_vert.
+# The output list of nodes must be in order of nodes
+# visited starting from from_vert and ending at to_vert.
+#
+# Hint: BFS or it's familiar friend Depth First Search (DFS) could be useful here.
+# Again if you need a refresher, here's that Tree Traversals lesson from CS 1.3
+
+    def findPath(self, from_vert, to_vert):
+        array = []
+
+        def __helper(curr_vert):
+            if curr_vert != None:
+                array.append(curr_vert)
+            print(curr_vert,to_vert, curr_vert == to_vert)
+            if curr_vert == to_vert:
+                return array
+            for v in self.vertList[curr_vert].getNeighbors():
+                return __helper(v)
+
+        if from_vert not in self.vertList:
+            return from_vert + "not in Graph."
+
+        if to_vert not in self.vertList:
+            return to_vert + "not in Graph."
+
+        return __helper(from_vert)
+
+
+# Make sure that both nodes from_vert and to_vert are actually in the graph
+# Run BFS or DFS starting from from_vert
+# Figure out a way to keep track of each path you take
+# Once you find to_vert, end the search.
+# Since you've been tracking the paths, find the path that goes from from_vert to to_vert
+# Return the path, in the order of nodes visited starting with from_vert and ending with to_vert
+#
+# Optimizing our Path
+#
+# This works, but what if there are multiple paths between two nodes?
+# What if one of those paths is significantly longer than the other?
+# Do you know Veronica from high school from your cousin Ricky,
+# who went to college with Sarah, who dated Jane, who is friends with Billy,
+# who was on the swim team with Veronica? Or do you know Veronica from your friend
+# Tom who also is friends with Veronica? In the next chapter,
+# we'll learn how to differentiate paths in order to optimize our route.
+
+# Driver code
 
 def make_graph_from_file(filepath):
     """input file should be of form:
@@ -135,8 +198,6 @@ def make_graph_from_file(filepath):
                 edges.append((int(entry[3]), int(entry[1])))
 
     return listOfVertices, edges
-
-# Driver code
 
 if __name__ == "__main__":
 
@@ -199,5 +260,13 @@ if __name__ == "__main__":
         print(g.vertList[v].getNeighbors())
 
     # challenge 3: breadth first search:
+    g.addEdge("Friend 2", "Friend 8") # 1 -> 2 -> 8
+    g.addEdge("Friend 3", "Friend 9") # 1 -> 3 -> 9
+                                      # 1 -> 2 -> 4
+                                      # 1 -> 3 -> 5
     print("\nchallenge 3: breadth first search:")
-    print(g.breadth_first_search("Friend 1", 1))
+    print(g.breadth_first_search("Friend 1", 2))
+
+    # challenge 4: DEPTH first search:
+    print("\nchallenge 4: DEPTH first search:")
+    print(g.findPath("Friend 1", "Friend 7"))
