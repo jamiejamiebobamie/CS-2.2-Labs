@@ -26,9 +26,11 @@ def readGraph(filepath):
             graphType = entry
         elif i == 1: # the second entry is a list of vertices
             listOfVertices = entry.split(",") # parse the string to get all numbers
-        elif i > 1 and len(entry) > 0 and len(entry) == 5: # takes into account empty lines and lines not of the correct format
-            edges.append((int(entry[1]), int(entry[3])))
+        elif i > 1 and len(entry) > 0 and len(entry) < 7: # takes into account empty lines and lines not of the correct format
             if graphType == "G": # an undirected graph has "mirrored" edges
+                edges.append((int(entry[1]), int(entry[3])))
                 edges.append((int(entry[3]), int(entry[1])))
+            else:
+                edges.append((int(entry[3]), int(entry[1]), int(entry[5])))
 
     return listOfVertices, edges

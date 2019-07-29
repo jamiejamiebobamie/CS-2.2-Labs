@@ -51,16 +51,14 @@ from collections import deque
 
 # if tests need to be written...
 
-filepath = "sampleGraphFile.txt"
-graph_data = readGraph(filepath)
+# filepath = "sampleGraphFile.txt"
+# graph_data = readGraph(filepath)
 
-vertices = graph_data[0]
-edges = graph_data[1]
+# vertices = graph_data[0]
+# edges = graph_data[1]
 
-new_graph = LLGraph(vertices)
-new_graph.addEdges(edges)
-
-
+# new_graph = LLGraph(vertices)
+# new_graph.addEdges(edges)
 
 
 def find_path(graph, nodeA, nodeB):
@@ -119,4 +117,4 @@ def find_path(graph, nodeA, nodeB):
     return "I have no idea..." # these are here for control flow / edge cases. at no point should the program reach this point in the code, but if it does...
 
 
-print(find_path(new_graph, new_graph.vertices[0], new_graph.vertices[3]))
+# print(find_path(new_graph, new_graph.vertices[0], new_graph.vertices[3]))

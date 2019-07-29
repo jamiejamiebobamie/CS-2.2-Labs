@@ -75,6 +75,18 @@ class LLGraph(object):
         new_linked_list = LinkedList(str(self.numberOfVertices))
         self.vertices.append(new_linked_list)
 
+    def findVertexIndex(self, vertex_id):
+        """vertex argument is a string that is the label or id of the vertex , NOT a linkedlist object
+        returns the vertices index in the graph if present
+        otherwise returns False
+        admittedly this should be a method of the graph class...
+        """
+        for i, v in enumerate(self.vertices):
+            if int(v.id) == int(vertex_id):
+                return i
+        return False
+
+
     def __iter__(self):
         """iterate over the vertex objects in the
         graph, to use sytax: for v in g

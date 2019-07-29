@@ -43,14 +43,17 @@ from collections import deque
 # filepath = "sampleGraphFile.txt"
 # graph_data = readGraph(filepath)
 #
+#
 # vertices = graph_data[0]
 # edges = graph_data[1]
 #
+# print(edges)
+#
+#
 # new_graph = LLGraph(vertices)
 # new_graph.addEdges(edges)
-# print(breadth_first_search(new_graph, new_graph.vertices[0], n=1))
-
-
+# print(graph_data)
+# print(new_graph.__iter__())
 
 
 def breadth_first_search(graph, node, n=1):
@@ -89,6 +92,7 @@ def breadth_first_search(graph, node, n=1):
         for vertex in current.getNeighbors():
             # look up the index into graph.vertices array based on the vertex's id.
             index = findVertexIndex(vertex)
+            # print(index+"hello")
             if index > -1:
                 if graph.vertices[index] not in checkedSet:
                     queue.append(graph.vertices[index])
@@ -97,8 +101,11 @@ def breadth_first_search(graph, node, n=1):
                 "something's up..."
 
         n -= 1
+
     else:
         for leftovers in list(queue):
             result.append(leftovers.id)
 
     return result
+
+# print(breadth_first_search(new_graph, new_graph.vertices[0], n=1))
