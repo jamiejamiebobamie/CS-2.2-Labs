@@ -1,3 +1,14 @@
+"""NOTE To Grader:
+    The basic implementation of the graph and its requisite functions have been implemented below.
+    For more advanced feautres of the graph adt, please see the appropriate challenges (2-8).
+
+    Please note: I was referring to an earlier version of the repo that I had forked and cloned at the start of the term.
+
+    As of 07/28/19, the required challenges are out of order and incomplete and will be refactored and completed by the end of the week (08/2/19).
+
+"""
+
+
 from collections import deque as d
 
 
@@ -84,36 +95,58 @@ class Graph:
         return iter(self.vertList.values())
 
     def breadth_first_search(self, vertex, n):
-        # Make sure the input node is actually in the graph
-        # Run breadth_first_search starting from the input node and going `n` levels deep
-        # Return all nodes found at the `n`th level
-
-        """This method assumes that we only want the friends who are n-friends away.
-        BROKEN****
+        """
+        challenge3.py contains the code below, but uses a different graph implementation than the one in this file.
+        Please refer to challenge3.py and the accompanying graph_adt_list.py file for BFS.
         """
 
-        queue = d()
-        degreesOfSeparation = int(n)
-        result = set()
+        def findVertexIndex(vertex_id):
+            # vertex argument is a string that is the label or id of the vertex , NOT a linkedlist object
+            # returns the vertices index in the graph if present
+            # otherwise returns False
+            for i, v in enumerate(graph.vertices):
+                if int(v.id) == int(vertex_id):
+                    return i
+            return False
 
-        def __helper_breadth_first_search(current_vert, degreesOfSeparation):
-            arrayOfNeighborKeys = self.vertList[current_vert].getNeighbors()
-            if arrayOfNeighborKeys and degreesOfSeparation >= 0:
-                queue.extend(arrayOfNeighborKeys)
-                vert = queue.popleft()
-                print(queue, vert, degreesOfSeparation-1)
-                __helper_breadth_first_search(vert,degreesOfSeparation-1)
-            else:
-                result.add(current_vert)
+        # check to see if the node is in the graph
+        index = findVertexIndex(node.id)
 
+        if not index > -1:
+            return "Node not in graph."
 
-        if vertex not in self.vertList: # check the vertex is in the graph
-            raiseException("The vertex is not present in your graph.")
+        result = []
+        queue = deque()
+        checkedSet = set()
 
-        if len(self.vertList) > 0: # check the graph isn't empty.
-            __helper_breadth_first_search(vertex,n)
+        queue.append(node)
+        checkedSet.add(node)
 
-        return list(result)
+        while queue and n:
+
+            current = queue.popleft()
+            result.append(current.id)
+
+            # getNeighbors returns an array of strings / vertex.id to look up...
+            for vertex in current.getNeighbors():
+                # look up the index into graph.vertices array based on the vertex's id.
+                index = findVertexIndex(vertex)
+                # print(index+"hello")
+                if index > -1:
+                    if graph.vertices[index] not in checkedSet:
+                        queue.append(graph.vertices[index])
+                        checkedSet.add(graph.vertices[index])
+                else:
+                    "something's up..."
+
+            n -= 1
+
+        else:
+            for leftovers in list(queue):
+                result.append(leftovers.id)
+
+        return result
+
 
 
 # Challenge: Write a method findPath(self, from_vert, to_vert) in the Graph() class

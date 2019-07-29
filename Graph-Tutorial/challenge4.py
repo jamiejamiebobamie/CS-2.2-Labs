@@ -109,7 +109,7 @@ def find_path(graph, nodeA, nodeB):
                     queue.append(graph.vertices[index])
                     checkedSet.add(graph.vertices[index])
             else:
-                "something's up..." # these are here for control flow / edge cases. at no point should the program reach this point in the code, but if it does...
+                return "something's up..." # these are here for control flow / edge cases. at no point should the program reach this point in the code, but if it does...
     else:
         for leftovers in list(queue):
             result.append(leftovers.id)
