@@ -1,22 +1,33 @@
 """
-Chapter 8: On Wednesdays We Wear Pink
+STRETCH : Chapter 8: How to Win Friends and Influence Users
 
-Find “cliques” of friends (small groups of tightly-connected users), etc…
+Google's PageRank algorithm is what they use to show you the most relevant search results for your query. Through this and other factors, Google influences what you see on that first page every single time you search something (and how often are you going past the first page?)
 
-While we are confident that we're not bound by wearing pink on Wednesdays,
-solving clique problems is a whole other issue. These problems tend to be challenging,
-but it's nothing we can't take on!
+PageRank Your Friends
 
-Clique Discovery
+PageRank is currently implemented using concepts from graph theory, assigning scores of "relevance" to links. We're going to model that by doing the same thing to our social networks (what, you've never ranked your friends before?). This is how social media influence is calculated! Let's find out which of our friends have the most influence in the network.
 
-Among other applications, the clique problem can arise in a social network.
-With our social network, a clique will represent a subset of people (nodes) who
-all know each other (share edges), and we can use various algorithms to find these cliques.
+The algorithm for PageRank uses an iterative approach, where each iteration improves our approximation of the true PageRank value. For determining the importance of web pages, the rankings become stable after around 30-40 iterations. But for our much smaller graphs, the rankings will likely become stable after just a few iterations.
 
-Challenge: Write a function that given a graph as input, finds INSERT SOMETHING ABOUT CLIQUES
+Each vertex is assigned an initial PageRank value of 1/n for n vertices. So if our social network has 10 users, each user is assigned 1/10.
+For each iteration:
+Assign each vertex a new PageRank value of 0.
+For each vertex v, take v's previous PageRank value and divide it amongst v's outgoing links. So if v had a PageRank value of 1/10 and has links to a, b, and c, then a, b, and c will each receive 1/30 to their new PageRank values.
+Here's a great video explanation if you'd like to learn more.
 
-CODE GOES HERE
+Note: For the below challenge, you'll be using a directed weighted graph.
 
-walk through clique algorithm, step by step
-Congrats on completing your journey through the Faker Network!
+Stretch Challenge: Write a method influencer(self) that uses the PageRank algorithm to rank you and your friends according to influence.
+
+def influencer(self):
+# Create a dictionary of vertex -> PageRank value and set initial values to 1/n
+# For each iteration:
+    # Create a new dictionary of vertex -> PageRank value, set all to 0
+    # For each vertex v:
+    	# Divide up v's previous PageRank value amongst v's neighbors.
+	# For m neighbors, each neighbor receives value/m
+    # Replace previous PageRanks with new PageRanks
+# Sort all vertices according to their PageRank value, return sorted list
 """
+
+# DID NOT COMPLETE THIS STRETCH CHALLENGE

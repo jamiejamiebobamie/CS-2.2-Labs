@@ -57,6 +57,7 @@ def breadth_first_search(graph, node, n=1):
 
     return result
 
+
 if __name__ == "__main__":
     file = sys.argv[1]
     nodeId = sys.argv[2]

@@ -1,58 +1,74 @@
+
 """
-Chapter 6: Long-Distance Friendships
+Chapter 6: Find your friend group
 
-We know you're six degrees away from Kevin Bacon, but who are you the furthest away from?
-Not your pen pal in Bhutan (that would still be a neighbor!), but someone you don't know,
-and who you in fact know the least!
+Find “cliques” of friends (small groups of tightly-connected users), etc…
 
-Graph Diameter
+The clique problem is a popular computational problem in computer science.
 
-One concept around graph distance that helps us solve this problem is finding the diameter of a graph.
-The diameter of a graph is the calculated by finding the shortest path between every possible pair of nodes,
-and then selecting the longest of those paths.
+Clique Discovery
 
-Challenge: Write a function that takes in a weighted graph as input, and outputs the diameter of the graph
+Among other applications, the clique problem can arise in a social network.
+With our social network, a clique will represent a subset of people (nodes)
+who all know each other (share edges), and we can use various algorithms to find these cliques.
 
-CODE GOES HERE
+Challenge: Write a method clique(self) that finds a clique in a graph that
+cannot have any other vertices added to it (note this is called a maximal clique).
 
-For every node, find the shortest path from it to every other node in the graph and track the paths and their length
-From your list of path/length pairs, pick the one with the largest length and return the length.
+def clique(self):
+#
+Start with an arbitrary vertex u and add it to the clique
+
+For v in remaining vertices not in the clique
+If v is adjacent to every other vertex already in the clique.
+	Add v to the clique
+	Discard v otherwise
 """
-from challenge4 import *
 
-# filepath = "sampleGraphFile.txt"
-# graph_data = readGraph(filepath)
-#
-#
-# vertices = graph_data[0]
-# edges = graph_data[1]
-#
-# print(edges)
-#
-#
-# new_graph = LLGraph(vertices)
-# new_graph.addEdges(edges)
-# print(graph_data)
-# print(new_graph.__iter__())
+from graph_adt_list import *
+from graph_reader import *
+import random
 
-def diameter(graph):
-    # intialize return variables
-    max_length = float("-inf")
-    max_length_nodes = None
-    # iterate through all vertices
-    # while iterating through all vertices
-    # to compare each vertex to the other
-    for from_vert in graph.vertices:
-        for to_vert in graph.vertices:
-    # find the shortest path from_vert to_vert
-            nodes = find_path(graph, from_vert, to_vert)
-    # store the max_length attribute and update the max_length with the length of the 'nodes' array
-            store = max_length
-            max_length = max(max_length, len(nodes))
-    # if the new nodes have the max length store them in 'max_length_nodes'
-            if max_length != store:
-                max_length_nodes = nodes
-    # once finsihed iterating return the max_length and nodes with the max_length
-    return max_length, max_length_nodes
+def clique(graph):
+    """finds a clique in a graph that
+        cannot have any other vertices added to it (note this is called a maximal clique).
+        Starts with an arbitrary vertex u and adds it to the clique
 
-# print(diameter(new_graph))
+        For v in remaining vertices not in the clique
+        If v is adjacent to every other vertex already in the clique.
+        	Add v to the clique
+        	Discard v otherwise
+    """
+    remainingVertices = graph.vertices.copy()
+    randomInt = random.randint(0,len(remainingVertices)-1)
+    startingVert = remainingVertices.pop(randomInt)
+    friend_group = [startingVert.id]
+
+    while remainingVertices:
+
+        randomInt = random.randint(0, len(remainingVertices)-1)
+        candidate = remainingVertices.pop(randomInt)
+        testInclusion = True
+        candidate_neighbors = candidate.getNeighbors()
+
+        # iterate through each person in the clique
+        # if the friend is not candidate's adjacent neighbors
+        # set the boolean 'testInclusion' to False
+        # and do not add the candidate to the friend group.
+        for friend in friend_group:
+            if friend not in candidate_neighbors:
+                testInclusion = False
+        if testInclusion:
+            friend_group.append(candidate.id)
+            
+    return startingVert, friend_group
+
+if __name__ == "__main__":
+    file = sys.argv[1]
+
+    data = readGraph(file)
+    graph = LLGraph(data[0])
+    graph.addEdges(data[1])
+
+    friend_group = clique(graph)
+    print("starting at " + friend_group[0].id + " the found clique consists of " + ", ".join(friend_group[1]))

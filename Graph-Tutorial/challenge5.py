@@ -1,121 +1,118 @@
-# Chapter 5: Closest of Friends
-#
-# If you were trying to show how two people are socially connected,
-# you would want to do so in the least number of connections possible.
-# Can you imagine if LinkedIn couldn't determine if someone was a 2nd or 20th degree connection?
-#
-# Shortest Path
-#
-# In order to solve this problem, we want to find the shortest path between two nodes in a graph.
-#
-# Challenge 1: Write a function that takes in a graph and two nodes (A and B) as input,
-# and outputs the list of nodes that make up the shortest path from A to B.
-# The output list of nodes must be in order of nodes visited starting from A and ending at B.
-#
-# CODE GOES HERE
-#
+
+
+"""challenge1
+
+Chapter 5: Closest of Friends
+
 # Make sure that both nodes A and B are actually in the graph
 # Run BFS starting from A
 # Figure out a way to keep track of each path you take
 # Once you find B, end the search.
 # Since you've been tracking the paths, find the shortest path that goes from A to B
 # Return the shortest path, in the order of nodes visited starting with A and ending with B
-# This seems pretty similar to what we did in an earlier chapter, right?
-# What if not all edges were of equal connection?
-#
-# Dijkstra's Algorithm
-#
-# For a given graph, it may take more work to traverse one edge over another.
-# These are show through edge weights, or weighted edges.
-# Up until now, all of our edges have had an implicit weight of one (1),
-# so they were all equal. But in many cases, weights could be any value.
-# Going back to our house example,
-# some places are more challenging to walk through than others
-# (hills, no sidewalk, a horde of gnomes blocking the path, etc.).
-#
-# We can't use BFS or DFS anymore to find the shortest path since those two algorithms
-# don't take weights into consideration. So what can we use instead?
-#
-# Dijkstra's Algorithm is a shortest path algorithm that takes weighted edges
-# into consideration! From the starting node, the algorithm visits neighbors one
-# by one and assigns them a distance value based on the cumulative weights of the
-# shortest path to get to that neighbor. Distances are updated if a shorter path
-# can be found, and once we're at the target node, we'll know the shortest path to
-# get to there. It's like running a more thoughtful BFS!
-#
-# Note: For the below challenge, you'll be using the weighted graph from the
-# starter code, which can be found here
-#
-# Challenge 2: Write a function that takes in a weighted graph and two nodes
-# (A and B) as input, and outputs the shortest path from A to B using Dijkstra's algorithm.
-#
-# CODE GOES HERE
-#
-# step by step walkthrough of implementing Dijkstra
-# The Long and Short of it is...
-#
-# Now we can handle the shortest path for both unweighted and weighted graphs!
-# Great work! It's great to find the shortest path, but sometimes we want to know
-# more about a graph. There's a lot of properties around distance we can measure,
-# and we'll dive into another one of them in the next chapter!
-
-"""challenge1
-
-    Challenge 1: Write a function that takes in a graph and two nodes (A and B) as input,
-    and outputs the list of nodes that make up the shortest path from A to B.
-    The output list of nodes must be in order of nodes visited starting from A and ending at B.
-
-    CODE GOES HERE:
-
-    Please see challenge 4 for this exact problem / solution.
 
 """
+
 
 from graph_adt_list import *
 from graph_reader import *
-import heapq
+from collections import deque
 
-"""challenge2
 
-# Challenge 2: Write a function that takes in a weighted graph and two nodes
-# (A and B) as input, and outputs the shortest path from A to B using Dijkstra's algorithm.
-#
-# CODE GOES HERE
-#
-# step by step walkthrough of implementing Dijkstra
-# The Long and Short of it is...
-"""
+def find_path(graph, nodeA, nodeB):
+    """Iterative BFS to find the path from nodeA to nodeB.
+       Returns an array of index.ids starting from nodeA's id to nodeB's id.
+       Returns error messages if nodeA or nodeB is not in the graph, if there is
+       graph entered or if there is no path from nodeA to nodeB
+    """
 
-filepath = "graph_data.txt"
+    def findVertexIndex(vertex_id):
+        # vertex argument is a string that is the label or id of the vertex , NOT a linkedlist object
+        # returns the vertices index in the graph if present
+        # otherwise returns False
+        for i, v in enumerate(graph.vertices):
+            if int(v.id) == int(vertex_id):
+                return i
+        return -1 # -1 is equivalent to false in this context as indices are range from 0 to len(graph.vertices)-1
 
-graph_data = readGraph(filepath)
 
-vertices = graph_data[0]
-edges = graph_data[1]
+    #nodeA and nodeB are the same.
+    if nodeA == nodeB:
+        # check to see if the vertex has a path to itself
+        for v in nodeA.getNeighbors():
+            if v == nodeA.id:
+                return [nodeA.id]
+        return "The node_to and the node_from are the same node, but there is no self-pointing edges."
 
-new_graph = LLGraph(vertices)
-new_graph.addEdges(edges)
+    # check to see if the nodes are in the graph.
+    nodeA_index = findVertexIndex(nodeA.id)
+    nodeB_index = findVertexIndex(nodeB.id)
+    if not nodeA_index > -1:
+        return nodeA.id + " not in graph."
+    if not nodeB_index > -1:
+        return nodeB.id + " not in graph."
 
-def dijkstra(graph,A,B):
+    # intialize result array, stack, and checkedSet
+    result = []
+    queue = deque()
+    checkedSet = set()
 
-    dist = {}
-    dist[A.id] = 0
+    # append the starting vertex to the stack to be iterated through and add it to the set of checked vertices
+    queue.append(nodeA)
+    checkedSet.add(nodeA)
 
-    priorityQueue = []
+    # while items exist in the stack
+    while queue:
 
-    index = graph.findVertexIndex(A.id)
+        # pop the top item added to the element as is customary with DFS.
+        current = queue.pop()
+        # add the item's id to the result.
+        result.append(current.id)
 
+        # getNeighbors returns an array of vertex ids to look up...
+        for vertex in current.getNeighbors():
+
+            # look up the index into graph.vertices array based on the vertex's id.
+            index = findVertexIndex(vertex)
+
+            # if the item has an index of 0 or greater.
+            # check to see if the linkedlist object at
+            # that index in the graph.vertices array is the target (nodeB).
+            if index > -1:
+                if graph.vertices[index] == nodeB:
+                    result.append(graph.vertices[index].id)
+                    return result
+                elif graph.vertices[index] not in checkedSet:
+                    queue.append(graph.vertices[index])
+                    checkedSet.add(graph.vertices[index])
+            else:
+                return str(vertex) + " is not in the graph."
+    else:
+        return "There is no path from "+ nodeA.id +" to " + nodeB.id +"."
+
+    return "Empty graph." # the program should not run this code.
+
+
+if __name__ == "__main__":
+    file = sys.argv[1]
+    from_vert = str(sys.argv[2])
+    to_vert = str(sys.argv[3])
+
+    data = readGraph(file)
+    graph = LLGraph(data[0])
+    graph.addEdges(data[1])
+
+    nodeA = None
+    nodeB = None
+    nodesInGraph = []
     for v in graph.vertices:
-        if v.id != A.id:
-            dist[v.id] = float('inf')
-            # print(dist)
-            # i = graph.findVertexIndex(v)
-            # node = graph.vertices[i]
-            priorityQueue.append(v)
-            print(priorityQueue)
-    heapq.heappush(priorityQueue, v)
+        nodesInGraph.append(v.id)
+        if v.id == from_vert:
+            nodeA = v
+        if v.id == to_vert:
+            nodeB = v
 
-    while priorityQueue:
-        pass
-
-dijkstra(new_graph, new_graph.vertices[0], new_graph.vertices[3])
+    if not nodeA or not nodeB:
+        print("Can't find one or both of the requested nodes: " + from_vert + " " + to_vert + ".\nThe nodes in the graph are: " + ", ".join(nodesInGraph))
+    else:
+        print("The nodes along the path are " + ", ".join(find_path(graph,nodeA, nodeB)))
