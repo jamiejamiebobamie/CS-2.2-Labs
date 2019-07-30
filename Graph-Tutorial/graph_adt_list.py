@@ -1,22 +1,4 @@
-# The Graph Abstract Data Type (ADT) is defined as follows:
-#
-# class `Graph()``
-# creates a new, empty graph.
-#
-# has the methods
-# addVertex(vert) adds -> a new vertex
-# addEdge(fromVert, toVert) adds -> a directed edge
-# addEdge(fromVert, toVert, weight) adds -> a weighted, directed edge.
-# getVertex(vertKey) finds -> the named vertKey
-# getVertices() returns -> the list of all vertices.
-#
-# graph should be implemented with an adjacency list.
 
-
-# NOTE:
-#       I renamed this file graph_adt_list.py,
-#       as opposed to the tutorial's suggested graph-adt-list.py
-#       so that I could import it into other challenge files.
 
 class LLGraph(object):
     """An Graph ADT with adjacency list.
@@ -40,10 +22,12 @@ class LLGraph(object):
             result.append(v.id)
         return result
 
-    def getNeighborsOfAVertex(self, vertex):
+    def getNeighborsOfAVertex(self, vertexId):
         """returns the id's/data of all of the neighbors of a given vertex."""
-        if vertex > 0 and vertex-1 < self.numberOfVertices:
-            return self.vertices[vertex-1].getNeighbors()
+        for i, v in enumerate(self.vertices):
+            if v.id == vertexId:
+                return self.vertices[i].getNeighbors()
+        return None
 
     def getEdges(self, vertex):
         """returns the the edges for a single vertex"""
@@ -53,8 +37,10 @@ class LLGraph(object):
     def addEdge(self, f, t, cost=1):
         """add an edge from vertex f (a number) to vertex t (a number) with a default cost/weight of 1
         """
-        if f-1 < self.numberOfVertices and f > 0:
-            self.vertices[f-1].addNeighbor(t,cost)
+        for i, v in enumerate(self.vertices):
+            f = str(f)
+            if v.id == f:
+                self.vertices[i].addNeighbor(t,cost)
 
     def addEdges(self, edgeData):
         """add the edges from an array of edge data.
@@ -92,9 +78,8 @@ class LLGraph(object):
         graph, to use sytax: for v in g
         """
         result = []
-        for v in self.vertices:
-            index = int(v.id)
-            result.append([v.id, self.getEdges(index)])
+        for i, v in enumerate(self.vertices):
+            result.append([v.id, self.getEdges(i+1)])
         return result
 
 
@@ -125,7 +110,7 @@ class LinkedList(object):
         result = []
         node = self.head
         while node:
-            result.append(node.data)
+            result.append(str(node.data))
             node = node.next
         return result
 
