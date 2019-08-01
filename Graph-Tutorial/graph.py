@@ -23,13 +23,13 @@ class Vertex(object):
         stored in a dictionary with key = vertex,
         value = weight of edge between self and neighbor.
         """
-        self.id = vertex
-        self.neighbors = {}
+        self.id = vertex                # string
+        self.neighbors = {}             # dictionary of vertex_id's to int weights
 
     def addNeighbor(self, vertex, weight=0):
         """add a neighbor along a weighted edge"""
         if vertex not in self.neighbors:
-            self.neighbors[vertex] = weight
+            self.neighbors[vertex] = weight # add vertex-weight to self.neighbors dictionary
 
     def __str__(self):
         """output the list of neighbors of this vertex"""
@@ -37,15 +37,15 @@ class Vertex(object):
 
     def getNeighbors(self):
         """return the neighbors of this vertex"""
-        return self.neighbors.keys()
+        return self.neighbors.keys()    # get all of the keys from the neighbors dictionary, keys == vertex_id strings
 
     def getId(self):
         """return the id of this vertex"""
-        return self.id
+        return self.id                  # get the vertex's id, a string
 
     def getEdgeWeight(self, vertex):
         """"return the weight of this edge"""
-        return self.neighbors[vertex] if self.neighbors[vertex] else None
+        return self.neighbors[vertex] if self.neighbors[vertex] else None #return the weight of a given vertex if the vertex is present in the self.neighbors dictionary
 
 """ Graph Class
 A class demonstrating the essential
@@ -57,42 +57,42 @@ class Graph:
     def __init__(self):
         """ initializes a graph object with an empty dictionary.
         """
-        self.vertList = {}
+        self.vertList = {}              # a dictionary of vertex_id's to vertex objects
         self.numVertices = 0
 
     def addVertex(self, key):
         """add a new vertex object to the graph with
         the given key and return the vertex
         """
-        self.numVertices += 1
-        new_vertex = Vertex(key)
-        self.vertList[key] = new_vertex
-        return self.vertList[key]
+        self.numVertices += 1           # increment the count of number of vertices
+        new_vertex = Vertex(key)        # create a new vertex object with the given vertex_id
+        self.vertList[key] = new_vertex # add the vertex to the dictionary of self.vertList as vertex_id : vertex object
+        return self.vertList[key]       # return the vertex object
 
     def getVertex(self, n):
         """return the vertex if it exists"""
-        return self.vertList[n] if self.vertList[n] else None
+        return self.vertList[n] if self.vertList[n] else None #return the vertex if the vertex is present in the self.vertList dictionary
 
     def addEdge(self, f, t, cost=0):
         """add an edge from vertex f to vertex t with a cost
         """
-        if not self.vertList[f]:
-            new_vertex = Vertex(f)
-            self.vertList[f] = new_vertex
-        if not self.vertList[t]:
-            new_vertex = Vertex(t)
-            self.vertList[t] = new_vertex
-        self.vertList[f].addNeighbor(t,cost)
+        if not self.vertList[f]:            # if the from_vert is not in the self.vertList
+            new_vertex = Vertex(f)          # make a new vertex object
+            self.vertList[f] = new_vertex   # add it to the self.vertList
+        if not self.vertList[t]:            # if the to_vert is not in the self.vertList
+            new_vertex = Vertex(t)          # make a new vertex object
+            self.vertList[t] = new_vertex   # add it to the self.vertList
+        self.vertList[f].addNeighbor(t,cost)# add the to_vert to the from_vert's neighbors dictionary with a weight
 
     def getVertices(self):
         """return all the vertices in the graph"""
-        return self.vertList.keys()
+        return self.vertList.keys()         # return all of the keys in the self.vertList dictionary, string vertex_ids
 
     def __iter__(self):
         """iterate over the vertex objects in the
         graph, to use sytax: for v in g
         """
-        return iter(self.vertList.values())
+        return iter(self.vertList.values()) # return all of the vertex objects of the graph
 
 
 def make_graph_from_file(filepath):
